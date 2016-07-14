@@ -14,24 +14,27 @@ import com.squareup.otto.Bus;
 
 import java.util.Date;
 
+import br.alexandrenavarro.forecast.BuildConfig;
 import br.alexandrenavarro.forecast.SystemPreferences;
 import br.alexandrenavarro.forecast.gson_adapter.DateTypeAdapter;
 import br.alexandrenavarro.forecast.model.City;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by alexandrenavarro on 7/13/16.
  */
-public class ForeCastApplication extends SugarApp {
+public class ForecastApplication extends SugarApp {
 
     private Bus bus;
-    private static ForeCastApplication instance;
+    private static ForecastApplication instance;
     private Retrofit defaultRetrofit;
-    private static final String BASE_URL = "http://api.worldweatheronline.com/premium/v1";
+    private static final String BASE_URL = "http://api.worldweatheronline.com/premium/v1/";
     private JobManager jobManager;
 
-    public ForeCastApplication() {
+    public ForecastApplication() {
         instance = this;
     }
 
@@ -41,7 +44,7 @@ public class ForeCastApplication extends SugarApp {
         getJobManager();
         SystemPreferences.init(this);
 
-        if(SystemPreferences.getInstance().isFirstRun()){
+        if (SystemPreferences.getInstance().isFirstRun()) {
             SystemPreferences.getInstance().setFirstRun();
             new Handler().post(new Runnable() {
                 @Override
@@ -91,6 +94,7 @@ public class ForeCastApplication extends SugarApp {
                     .create();
             defaultRetrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .client(getOkHttpClient())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
 
@@ -103,6 +107,7 @@ public class ForeCastApplication extends SugarApp {
         Configuration.Builder builder = new Configuration.Builder(this)
                 .customLogger(new CustomLogger() {
                     private static final String TAG = "JOBS";
+
                     @Override
                     public boolean isDebugEnabled() {
                         return true;
@@ -143,7 +148,7 @@ public class ForeCastApplication extends SugarApp {
         return this.bus;
     }
 
-    public static ForeCastApplication getInstance() {
+    public static ForecastApplication getInstance() {
         return instance;
     }
 
@@ -152,5 +157,11 @@ public class ForeCastApplication extends SugarApp {
             configureJobManager();
         }
         return jobManager;
+    }
+
+    private OkHttpClient getOkHttpClient() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+        return new OkHttpClient.Builder().addInterceptor(logging).build();
     }
 }

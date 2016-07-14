@@ -11,6 +11,7 @@ import java.util.List;
 
 import br.alexandrenavarro.forecast.R;
 import br.alexandrenavarro.forecast.model.City;
+import br.alexandrenavarro.forecast.model.Forecast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -67,6 +68,14 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             super(v);
             ButterKnife.bind(this, v);
             root = v;
+        }
+    }
+
+    public void updateForecast(City city, Forecast forecast){
+        int index = cities.indexOf(city);
+        if(index != -1){
+            cities.get(index).setForecast(forecast);
+            notifyItemChanged(index);
         }
     }
 }

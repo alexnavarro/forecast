@@ -5,8 +5,6 @@ import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.dsl.Table;
 
-import java.io.Serializable;
-
 /**
  * Created by alexandrenavarro on 7/13/16.
  */
@@ -19,7 +17,7 @@ public class City extends SugarRecord {
     private String region;
     private double latitude;
     private double longitude;
-    @Ignore private ForeCast foreCast;
+    @Ignore private Forecast forecast;
 
     public String getName() {
         return name;
@@ -61,12 +59,12 @@ public class City extends SugarRecord {
         this.longitude = longitude;
     }
 
-    public void setForeCast(ForeCast foreCast) {
-        this.foreCast = foreCast;
+    public void setForecast(Forecast forecast) {
+        this.forecast = forecast;
     }
 
-    public ForeCast getForeCast() {
-        return foreCast;
+    public Forecast getForecast() {
+        return forecast;
     }
 
     @Override

@@ -1,19 +1,18 @@
 package br.alexandrenavarro.forecast.net;
 
-import br.alexandrenavarro.forecast.model.ForeCast;
+import com.google.gson.annotations.SerializedName;
+
+import br.alexandrenavarro.forecast.model.Forecast;
 
 /**
  * Created by alexandrenavarro on 7/13/16.
  */
-public class ForeCastResponse {
+public class ForecastResponse {
 
-    private Data data;
+    @SerializedName("data")
+    private Forecast forecast;
 
-    private class Data{
-        protected ForeCast foreCast;
-    }
-
-    public ForeCast foreCast() {
-        return data != null ? data.foreCast : null;
+    public Forecast getForecast() {
+        return forecast;
     }
 }

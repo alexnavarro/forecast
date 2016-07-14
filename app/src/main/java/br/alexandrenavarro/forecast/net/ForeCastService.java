@@ -7,7 +7,7 @@ import retrofit2.http.Query;
 /**
  * Created by alexandrenavarro on 7/13/16.
  */
-public interface ForeCastService {
+public interface ForecastService {
 
     @GET("search.ashx?format=json&key=f3a4e50779964291867202620161207")
     Call<SearchCityResponse> searchByCity(@Query("query") String query,
@@ -18,6 +18,6 @@ public interface ForeCastService {
     //http://api.worldweatheronline.com/premium/v1/weather.ashx?q=-23.5333,-46.6167&key=f3a4e50779964291867202620161207&format=json&num_of_days=5&tp=24
 
     @GET("weather.ashx?format=json&key=f3a4e50779964291867202620161207")
-    Call<ForeCastResponse> foreCast(@Query("q") String latitudeAndLongitude,
+    Call<ForecastResponse> foreCast(@Query("q") String latitudeAndLongitude,
                                     @Query("num_of_days") int numberOfDays, @Query("tp") int timeIntervals);
 }

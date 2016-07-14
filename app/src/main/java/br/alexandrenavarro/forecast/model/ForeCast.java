@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by alexandrenavarro on 7/13/16.
  */
-public class ForeCast {
+public class Forecast {
 
     @SerializedName("current_condition")
     private List<CurrentCondition> currentConditions;
