@@ -23,8 +23,17 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
+        ViewHolder holder = new ViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.city_item, parent, false));
+
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Todo Abrir Activity de Previsao
+            }
+        });
+
+        return holder;
     }
 
     @Override

@@ -2,6 +2,7 @@ package br.alexandrenavarro.forecast.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 import com.orm.dsl.Table;
 
 import java.io.Serializable;
@@ -13,12 +14,12 @@ import java.io.Serializable;
 @Table(name ="city")
 public class City extends SugarRecord {
 
-    @SerializedName("areaName")
-    private String name;
+    @SerializedName("areaName") private String name;
     private String country;
     private String region;
     private double latitude;
     private double longitude;
+    @Ignore private ForeCast foreCast;
 
     public String getName() {
         return name;
@@ -60,6 +61,13 @@ public class City extends SugarRecord {
         this.longitude = longitude;
     }
 
+    public void setForeCast(ForeCast foreCast) {
+        this.foreCast = foreCast;
+    }
+
+    public ForeCast getForeCast() {
+        return foreCast;
+    }
 
     @Override
     public boolean equals(Object o) {
