@@ -6,17 +6,11 @@ import android.util.Log;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.config.Configuration;
 import com.birbit.android.jobqueue.log.CustomLogger;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.orm.SugarApp;
 import com.squareup.otto.Bus;
 
-import java.util.Date;
-
 import br.alexandrenavarro.forecast.BuildConfig;
 import br.alexandrenavarro.forecast.SystemPreferences;
-import br.alexandrenavarro.forecast.gson_adapter.DateTypeAdapter;
 import br.alexandrenavarro.forecast.model.City;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -87,15 +81,10 @@ public class ForecastApplication extends SugarApp {
 
     public Retrofit getRetrofitClient() {
         if (defaultRetrofit == null) {
-            Gson gson = new GsonBuilder()
-                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                    .registerTypeAdapter(Date.class, new DateTypeAdapter())
-                    .create();
             defaultRetrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(getOkHttpClient())
-                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
         }

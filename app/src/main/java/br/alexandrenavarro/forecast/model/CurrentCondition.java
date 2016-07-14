@@ -17,6 +17,7 @@ public class CurrentCondition {
     private List<WeatherResources> weatherIconUrl;
     @SerializedName("weatherDesc")
     private List<WeatherResources> weatherDescription;
+    private int weatherCode;
 
     public String getTempCelsius() {
         return tempCelsius;
@@ -36,5 +37,9 @@ public class CurrentCondition {
 
     public String getWeatherIconUrl() {
         return weatherIconUrl != null && weatherIconUrl.size() > 0 ? weatherIconUrl.get(0).getValue() : null ;
+    }
+
+    public int getWeatherCode() {
+        return weatherCode;
     }
 }

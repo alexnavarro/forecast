@@ -1,8 +1,13 @@
 package br.alexandrenavarro.forecast.model;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,7 +15,7 @@ import java.util.List;
  */
 public class Weather {
 
-    private Calendar date;
+    private String date;
     @SerializedName("mintempC")
     private String minTempCelsius;
     @SerializedName("mintempF")
@@ -22,8 +27,21 @@ public class Weather {
     @SerializedName("hourly")
     private List<WeatherHourly> weatherHourlies;
 
-    public Calendar getDate() {
-        return date;
+    public Date getDate() {
+        if(TextUtils.isEmpty(date)){
+            return null;
+        }
+
+        Date returnDate = null;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            returnDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            Log.d(Weather.class.getSimpleName(), e.getMessage());
+        }
+        return returnDate;
     }
 
     public String getMinTempCelsius() {
@@ -47,6 +65,7 @@ public class Weather {
         protected List<WeatherResources> weatherIconUrl;
         @SerializedName("weatherDesc")
         protected List<WeatherResources> weatherDescription;
+        protected int weatherCode;
 
     }
 
@@ -67,5 +86,12 @@ public class Weather {
         }
 
         return weatherHourlies.get(0).weatherDescription.get(0).getValue();
+    }
+
+    public int getWeatherCode(){
+        if(weatherHourlies == null || weatherHourlies.size() < 1 ){
+            return 0;
+        }
+        return weatherHourlies.get(0).weatherCode;
     }
 }
