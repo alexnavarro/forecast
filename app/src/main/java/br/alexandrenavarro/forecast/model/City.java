@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 import com.orm.dsl.Table;
 
+import java.io.Serializable;
+
 /**
  * Created by alexandrenavarro on 7/13/16.
  */

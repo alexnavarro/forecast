@@ -38,6 +38,6 @@ public class SystemPreferences {
     }
 
     public boolean isFirstRun() {
-        return mPreferences.getBoolean("first_run_date", true);
+        return mPreferences.getBoolean("first_run", true);
     }
 }
