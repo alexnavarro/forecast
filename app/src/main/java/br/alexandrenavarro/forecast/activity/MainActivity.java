@@ -1,6 +1,7 @@
 package br.alexandrenavarro.forecast.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +11,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import br.alexandrenavarro.forecast.R;
@@ -46,18 +47,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        City city = new City();
-        city.setCountry("Brazil");
-        city.setName("Sao Paulo");
-        city.setRegion("Sao Paulo");
-        city.setLatitude(-23.533);
-        city.setLongitude(-46.617);
-
-        List<City> cityList = new ArrayList<>();
-        cityList.add(city);
-
-        mAdapter.addCities(cityList);
-
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                List<City> list = City.listAll(City.class);
+                mAdapter.addCities(list);
+            }
+        });
     }
 
     @Override

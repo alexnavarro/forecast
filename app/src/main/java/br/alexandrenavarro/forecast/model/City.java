@@ -1,11 +1,15 @@
 package br.alexandrenavarro.forecast.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.orm.SugarRecord;
+import com.orm.dsl.Table;
 
 /**
  * Created by alexandrenavarro on 7/13/16.
  */
-public class City {
+
+@Table(name ="city")
+public class City extends SugarRecord {
 
     @SerializedName("areaName")
     private String name;
@@ -53,6 +57,7 @@ public class City {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
 
     @Override
     public boolean equals(Object o) {
