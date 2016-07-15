@@ -1,5 +1,6 @@
 package br.alexandrenavarro.forecast.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +11,19 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import br.alexandrenavarro.forecast.R;
+import br.alexandrenavarro.forecast.activity.ForecastDetailActivity;
+import br.alexandrenavarro.forecast.activity.MainActivity;
 import br.alexandrenavarro.forecast.app.ForecastApplication;
 import br.alexandrenavarro.forecast.job.ForecastJob;
 import br.alexandrenavarro.forecast.model.City;
 import br.alexandrenavarro.forecast.model.CurrentCondition;
 import br.alexandrenavarro.forecast.model.Forecast;
+import br.alexandrenavarro.forecast.utils.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -38,7 +42,9 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Todo Abrir Activity de Previsao
+                Intent intent = new Intent(view.getContext(), ForecastDetailActivity.class);
+                intent.putExtra(MainActivity.EXTRA_CITY, (Serializable) view.getTag());
+                view.getContext().startActivity(intent);
             }
         });
 
@@ -59,16 +65,13 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         City city = cities.get(position);
         viewHolder.txtCity.setText(city.getName());
         viewHolder.btnRemove.setTag(city);
+        viewHolder.root.setTag(city);
 
         Forecast forecast = city.getForecast();
         if(forecast != null){
             if(forecast.getCurrentConditions() != null && forecast.getCurrentConditions().size() > 0){
                 CurrentCondition currentCondition = forecast.getCurrentConditions().get(0);
-                if(Locale.US.equals(Locale.getDefault())){
-                    viewHolder.txtTemperature.setText(currentCondition.getTempFahrenheit() + " \u2109");
-                }else {
-                    viewHolder.txtTemperature.setText(currentCondition.getTempCelsius() + " \u2103");
-                }
+                viewHolder.txtTemperature.setText(Util.getTemperatureBasedOnCurrentLocale(currentCondition));
 
                 if(currentCondition.getWeatherIconUrl() != null){
                     Picasso.with(viewHolder.imvWeather.getContext()).

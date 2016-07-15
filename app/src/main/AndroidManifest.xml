@@ -22,7 +22,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.SearchableActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activity.SearchableActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".activity.ForecastDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data android:name="DATABASE" android:value="forecast.db" />
         <meta-data android:name="VERSION" android:value="1" />

@@ -2,12 +2,13 @@ package br.alexandrenavarro.forecast.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by alexandrenavarro on 7/13/16.
  */
-public class CurrentCondition {
+public class CurrentCondition implements Serializable{
 
     @SerializedName("temp_C")
     private String tempCelsius;

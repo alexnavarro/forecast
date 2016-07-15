@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by alexandrenavarro on 7/13/16.
  */
-public class Weather {
+public class Weather implements Serializable{
 
     private String date;
     @SerializedName("mintempC")
@@ -60,7 +61,7 @@ public class Weather {
         return maxTempFahrenheit;
     }
 
-    private class WeatherHourly{
+    private class WeatherHourly implements Serializable{
 
         protected List<WeatherResources> weatherIconUrl;
         @SerializedName("weatherDesc")

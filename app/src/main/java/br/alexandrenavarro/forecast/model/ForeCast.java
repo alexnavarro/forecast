@@ -2,13 +2,14 @@ package br.alexandrenavarro.forecast.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by alexandrenavarro on 7/13/16.
  */
-public class Forecast {
+public class Forecast implements Serializable{
 
     @SerializedName("current_condition")
     private List<CurrentCondition> currentConditions;

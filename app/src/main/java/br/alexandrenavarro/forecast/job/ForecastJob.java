@@ -23,7 +23,6 @@ import retrofit2.Response;
 public class ForecastJob extends Job {
 
     private City city;
-
     public ForecastJob(City city) {
         super(new Params(Integer.MAX_VALUE).groupBy("forecast"));
         this.city = city;
