@@ -3,6 +3,7 @@ package br.alexandrenavarro.forecast.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,8 +35,10 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout mSwipeRefreshLayout;
 
     private CityAdapter mAdapter;
+    private boolean isLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +46,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
-
-
         mAdapter = new CityAdapter();
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         firstRun();
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isLoading) {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    return;
+                }
+
+                update();
+
+            }
+        });
 
 
     }
@@ -106,24 +119,31 @@ public class MainActivity extends AppCompatActivity {
                 }
             }).start();
         }else {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    final List<City> cities = City.listAll(City.class);
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            mAdapter.addCities(cities);
-                        }
-                    });
-
-                    for (City city: cities) {
-                        ForecastApplication.getInstance().getJobManager().addJob(new ForecastJob(city));
-                    }
-                }
-            }).start();
+            update();
         }
+    }
+
+    private void update() {
+        isLoading = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final List<City> cities = City.listAll(City.class);
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        mAdapter.addCities(cities);
+                        isLoading = false;
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+
+                for (City city: cities) {
+                    ForecastApplication.getInstance().getJobManager().addJob(new ForecastJob(city));
+                }
+            }
+        }).start();
     }
 
     @Override

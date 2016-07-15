@@ -2,6 +2,7 @@ package br.alexandrenavarro.forecast.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,9 +40,11 @@ public class ForecastDetailActivity extends AppCompatActivity{
     @BindView(R.id.txt_description) TextView txtDescription;
     @BindView(R.id.txt_temperature) TextView txtTemperature;
     @BindView(R.id.main_container) View mainContainer;
+    @BindView(R.id.swipeRefreshLayout) SwipeRefreshLayout mSwipeRefreshLayout;
 
     City mCity;
     private ForecastDetailAdapter mAdapter;
+    private boolean isLoading;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,10 +81,24 @@ public class ForecastDetailActivity extends AppCompatActivity{
         if(forecast.getWeathers() != null){
             mAdapter.addAll(forecast.getWeathers());
         }
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (isLoading) {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    return;
+                }
+
+                update();
+
+            }
+        });
     }
 
     private void update(){
         if(mCity != null)
+            isLoading = true;
             ForecastApplication.getInstance().getJobManager().addJobInBackground(new ForecastJob(mCity));
     }
 
@@ -89,6 +106,8 @@ public class ForecastDetailActivity extends AppCompatActivity{
     public void onForecastSuccess(UpdateForecastEvent event){
         mCity.setForecast(event.getForecast());
         bind(event.getForecast());
+        isLoading = false;
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
 
@@ -108,5 +127,17 @@ public class ForecastDetailActivity extends AppCompatActivity{
         }
 
         return false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ForecastApplication.getInstance().getBus().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        ForecastApplication.getInstance().getBus().unregister(this);
+        super.onPause();
     }
 }

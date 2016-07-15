@@ -20,18 +20,18 @@
 
         <ImageView
             android:id="@+id/imv_weather"
-            android:layout_alignParentLeft="true"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
             android:layout_marginRight="25dp" />
 
 
         <LinearLayout
             android:id="@+id/container_city"
-            android:layout_toRightOf="@id/imv_weather"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/imv_weather"
             android:orientation="vertical">
 
             <TextView
@@ -52,22 +52,29 @@
 
 
         <TextView
-            android:layout_toRightOf="@id/container_city"
             android:id="@+id/txt_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="8dp"
+            android:layout_toRightOf="@id/container_city"
             android:textSize="25sp"
             tools:text="18" />
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
 </LinearLayout>
