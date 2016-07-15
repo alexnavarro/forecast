@@ -1,5 +1,6 @@
 package br.alexandrenavarro.forecast.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +11,11 @@ import android.view.View;
 
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.alexandrenavarro.forecast.R;
+import br.alexandrenavarro.forecast.SystemPreferences;
 import br.alexandrenavarro.forecast.adapter.CityAdapter;
 import br.alexandrenavarro.forecast.app.ForecastApplication;
 import br.alexandrenavarro.forecast.event.UpdateForecastEvent;
@@ -20,8 +23,13 @@ import br.alexandrenavarro.forecast.job.ForecastJob;
 import br.alexandrenavarro.forecast.model.City;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final static String TAG = "MainActivity";
+    public final static int SEARCHABLE_REQUEST_CODE = 666;
+    public final static String EXTRA_CITY = "EXTRA_CITY";
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
@@ -36,35 +44,86 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
+
+
         mAdapter = new CityAdapter();
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        firstRun();
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-            }
-        });
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final List<City> cities = City.listAll(City.class);
-                runOnUiThread(new Runnable() {
+    }
 
-                    @Override
-                    public void run() {
-                        mAdapter.addCities(cities);
+    private void firstRun() {
+        if (SystemPreferences.getInstance().isFirstRun()) {
+            SystemPreferences.getInstance().setFirstRun();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    City dublinCity = new City();
+                    dublinCity.setName("Dublin");
+                    dublinCity.setCountry("Ireland");
+                    dublinCity.setRegion("Dublin");
+                    dublinCity.setLatitude(53.333);
+                    dublinCity.setLongitude(-6.249);
+                    dublinCity.save();
+
+                    City londonCity = new City();
+                    londonCity.setName("London");
+                    londonCity.setCountry("United Kingdom");
+                    londonCity.setRegion("City of London, Greater London");
+                    londonCity.setLatitude(51.517);
+                    londonCity.setLongitude(-0.106);
+                    londonCity.save();
+
+                    City newYorkCity = new City();
+                    newYorkCity.setName("New York");
+                    newYorkCity.setCountry("United States of America");
+                    newYorkCity.setRegion("New York");
+                    newYorkCity.setLatitude(40.714);
+                    newYorkCity.setLongitude(-74.006);
+                    newYorkCity.save();
+
+                    City barcelonaCity = new City();
+                    barcelonaCity.setName("Barcelona");
+                    barcelonaCity.setCountry("Spain");
+                    barcelonaCity.setRegion("Catalonia");
+                    barcelonaCity.setLatitude(41.383);
+                    barcelonaCity.setLongitude(2.183);
+                    barcelonaCity.save();
+
+                    final List<City> cities = City.listAll(City.class);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ForecastApplication.getInstance().getBus().post(cities);
+                        }
+                    });
+
+                    for (City city: cities) {
+                        ForecastApplication.getInstance().getJobManager().addJob(new ForecastJob(city));
                     }
-                });
-
-                for (City city: cities) {
-                    ForecastApplication.getInstance().getJobManager().addJob(new ForecastJob(city));
                 }
-            }
-        }).start();
+            }).start();
+        }else {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final List<City> cities = City.listAll(City.class);
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            mAdapter.addCities(cities);
+                        }
+                    });
+
+                    for (City city: cities) {
+                        ForecastApplication.getInstance().getJobManager().addJob(new ForecastJob(city));
+                    }
+                }
+            }).start();
+        }
     }
 
     @Override
@@ -84,25 +143,24 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.updateForecast(event.getCity(), event.getForecast());
     }
 
-    //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
+    @Subscribe
+    public void updateAll(ArrayList<City> cities){
+        mAdapter.addCities(cities);
+    }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @OnClick(R.id.fab)
+    public void onClickFab(View view) {
+        Intent intent = new Intent(getApplicationContext(), SearchableActivity.class);
+        startActivityForResult(intent, SEARCHABLE_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == SEARCHABLE_REQUEST_CODE && resultCode == RESULT_OK){
+            if(data != null && data.hasExtra(EXTRA_CITY)){
+                City city = (City) data.getSerializableExtra(EXTRA_CITY);
+                mAdapter.addCity(city);
+            }
+        }
+    }
 }

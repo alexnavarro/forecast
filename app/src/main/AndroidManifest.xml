@@ -22,6 +22,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.SearchableActivity" android:theme="@style/AppTheme.NoActionBar"/>
+
         <meta-data android:name="DATABASE" android:value="forecast.db" />
         <meta-data android:name="VERSION" android:value="1" />
         <meta-data android:name="QUERY_LOG" android:value="true" />

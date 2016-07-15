@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="16dp"
+    android:orientation="vertical">
+
+    <br.alexandrenavarro.forecast.view.DelayAutoCompleteTextView
+        android:id="@+id/auto_complete"
+        style="?android:attr/dropDownItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/searchable_activity_hint"
+        android:padding="16dp"
+        android:textColor="@color/material_text_primary_dark"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textSize="16sp" />
+
+    <ProgressBar
+        android:id="@+id/pb_loading_indicator"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginRight="16dp"
+        android:visibility="gone" />
+
+</LinearLayout>

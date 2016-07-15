@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Locale;
 
 import br.alexandrenavarro.forecast.R;
+import br.alexandrenavarro.forecast.app.ForecastApplication;
+import br.alexandrenavarro.forecast.job.ForecastJob;
 import br.alexandrenavarro.forecast.model.City;
 import br.alexandrenavarro.forecast.model.CurrentCondition;
 import br.alexandrenavarro.forecast.model.Forecast;
@@ -40,6 +42,14 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             }
         });
 
+        holder.btnRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               City city = (City) view.getTag();
+                remove(city);
+            }
+        });
+
         return holder;
     }
 
@@ -48,6 +58,7 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         ViewHolder viewHolder = (ViewHolder) holder;
         City city = cities.get(position);
         viewHolder.txtCity.setText(city.getName());
+        viewHolder.btnRemove.setTag(city);
 
         Forecast forecast = city.getForecast();
         if(forecast != null){
@@ -81,6 +92,35 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
             this.cities.addAll(cities);
             notifyDataSetChanged();
+        }
+    }
+
+    public void addCity(final City city){
+        int index = cities.indexOf(city);
+        if(index == -1){
+            cities.add(city);
+            notifyItemChanged(index);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    city.save();
+                    ForecastApplication.getInstance().getJobManager().addJob(new ForecastJob(city));
+                }
+            }).start();
+        }
+    }
+
+    public void remove(final City city){
+        int index = cities.indexOf(city);
+        if(index != -1){
+            cities.remove(city);
+            notifyItemRemoved(index);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    city.delete();
+                }
+            }).start();
         }
     }
 

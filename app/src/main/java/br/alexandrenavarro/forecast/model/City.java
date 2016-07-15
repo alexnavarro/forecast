@@ -1,18 +1,19 @@
 package br.alexandrenavarro.forecast.model;
 
-import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 import com.orm.dsl.Table;
+
+import java.io.Serializable;
 
 /**
  * Created by alexandrenavarro on 7/13/16.
  */
 
 @Table(name ="city")
-public class City extends SugarRecord {
+public class City extends SugarRecord implements Serializable{
 
-    @SerializedName("areaName") private String name;
+    private String name;
     private String country;
     private String region;
     private double latitude;

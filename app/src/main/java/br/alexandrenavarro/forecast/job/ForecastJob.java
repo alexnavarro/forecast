@@ -37,7 +37,7 @@ public class ForecastJob extends Job {
     @Override
     public void onRun() throws Throwable {
         ForecastApplication.getInstance().getRetrofitClient().
-                create(ForecastService.class).foreCast((city.getLongitude() + "," + city.getLongitude()), 5, 24).
+                create(ForecastService.class).foreCast((city.getLatitude() + "," + city.getLongitude()), 5, 24).
                 enqueue(new Callback<ForecastResponse>() {
                     @Override
                     public void onResponse(Call<ForecastResponse> call, Response<ForecastResponse> response) {

@@ -1,6 +1,5 @@
 package br.alexandrenavarro.forecast.app;
 
-import android.os.Handler;
 import android.util.Log;
 
 import com.birbit.android.jobqueue.JobManager;
@@ -11,7 +10,6 @@ import com.squareup.otto.Bus;
 
 import br.alexandrenavarro.forecast.BuildConfig;
 import br.alexandrenavarro.forecast.SystemPreferences;
-import br.alexandrenavarro.forecast.model.City;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -37,46 +35,6 @@ public class ForecastApplication extends SugarApp {
         super.onCreate();
         getJobManager();
         SystemPreferences.init(this);
-
-        if (SystemPreferences.getInstance().isFirstRun()) {
-            SystemPreferences.getInstance().setFirstRun();
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    City dublinCity = new City();
-                    dublinCity.setName("Dublin");
-                    dublinCity.setCountry("Ireland");
-                    dublinCity.setRegion("Dublin");
-                    dublinCity.setLatitude(53.333);
-                    dublinCity.setLongitude(-6.249);
-                    dublinCity.save();
-
-                    City londonCity = new City();
-                    londonCity.setName("London");
-                    londonCity.setCountry("United Kingdom");
-                    londonCity.setRegion("City of London, Greater London");
-                    londonCity.setLatitude(51.517);
-                    londonCity.setLongitude(-0.106);
-                    londonCity.save();
-
-                    City newYorkCity = new City();
-                    newYorkCity.setName("New York");
-                    newYorkCity.setCountry("United States of America");
-                    newYorkCity.setRegion("New York");
-                    newYorkCity.setLatitude(40.714);
-                    newYorkCity.setLongitude(-74.006);
-                    newYorkCity.save();
-
-                    City barcelonaCity = new City();
-                    barcelonaCity.setName("Barcelona");
-                    barcelonaCity.setCountry("Spain");
-                    barcelonaCity.setRegion("Catalonia");
-                    barcelonaCity.setLatitude(41.383);
-                    barcelonaCity.setLongitude(2.183);
-                    barcelonaCity.save();
-                }
-            });
-        }
     }
 
     public Retrofit getRetrofitClient() {
