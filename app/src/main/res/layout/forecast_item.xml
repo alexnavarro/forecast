@@ -106,10 +106,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:maxLength="7"
+            android:maxLines="1"
             android:textSize="18sp"
             tools:text="Cloudy" />
-
 
     </LinearLayout>
 

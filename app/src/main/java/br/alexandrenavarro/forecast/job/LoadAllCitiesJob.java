@@ -1,6 +1,5 @@
 package br.alexandrenavarro.forecast.job;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
