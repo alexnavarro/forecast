@@ -37,17 +37,19 @@ Very straightforward, clone the project and open it in Android Studio or run it 
 
 ##Available Elements
 ###Main Screen
-Main screen of the app, the user can delete a city,see the detail screen or include a new city
+Main screen of the app, the user can delete a city,see the detail screen or include a new city.
 
 <img src="/screenshots/main_screen.png" width="200">
 
 ###Forecast Detail
 In this screen are present the current weather and next five days forecast.
+
 <img src="/screenshots/forecast_detail.png" width="200">
 
 ###Insert City
-This one allows add a new city
-<img src="/screenshots/search.png" width="200">
 
+This one allows add a new city.
+
+<img src="/screenshots/search.png" width="200">
 
 [1]: http://api.worldweatheronline.com
