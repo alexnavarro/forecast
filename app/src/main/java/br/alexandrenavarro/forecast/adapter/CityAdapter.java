@@ -76,6 +76,7 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 if(currentCondition.getWeatherIconUrl() != null){
                     Picasso.with(viewHolder.imvWeather.getContext()).
                             load(currentCondition.getWeatherIconUrl()).
+                            centerCrop().
                             fit().into(viewHolder.imvWeather);
                 }
             }

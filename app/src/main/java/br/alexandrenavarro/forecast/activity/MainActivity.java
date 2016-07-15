@@ -13,14 +13,15 @@ import android.view.View;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import br.alexandrenavarro.forecast.R;
 import br.alexandrenavarro.forecast.SystemPreferences;
 import br.alexandrenavarro.forecast.adapter.CityAdapter;
 import br.alexandrenavarro.forecast.app.ForecastApplication;
 import br.alexandrenavarro.forecast.event.UpdateForecastEvent;
+import br.alexandrenavarro.forecast.job.FirsRunJob;
 import br.alexandrenavarro.forecast.job.ForecastJob;
+import br.alexandrenavarro.forecast.job.LoadAllCitiesJob;
 import br.alexandrenavarro.forecast.model.City;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,66 +59,14 @@ public class MainActivity extends AppCompatActivity {
                     mSwipeRefreshLayout.setRefreshing(false);
                     return;
                 }
-
                 update();
-
             }
         });
-
-
     }
 
     private void firstRun() {
         if (SystemPreferences.getInstance().isFirstRun()) {
-            SystemPreferences.getInstance().setFirstRun();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    City dublinCity = new City();
-                    dublinCity.setName("Dublin");
-                    dublinCity.setCountry("Ireland");
-                    dublinCity.setRegion("Dublin");
-                    dublinCity.setLatitude(53.333);
-                    dublinCity.setLongitude(-6.249);
-                    dublinCity.save();
-
-                    City londonCity = new City();
-                    londonCity.setName("London");
-                    londonCity.setCountry("United Kingdom");
-                    londonCity.setRegion("City of London, Greater London");
-                    londonCity.setLatitude(51.517);
-                    londonCity.setLongitude(-0.106);
-                    londonCity.save();
-
-                    City newYorkCity = new City();
-                    newYorkCity.setName("New York");
-                    newYorkCity.setCountry("United States of America");
-                    newYorkCity.setRegion("New York");
-                    newYorkCity.setLatitude(40.714);
-                    newYorkCity.setLongitude(-74.006);
-                    newYorkCity.save();
-
-                    City barcelonaCity = new City();
-                    barcelonaCity.setName("Barcelona");
-                    barcelonaCity.setCountry("Spain");
-                    barcelonaCity.setRegion("Catalonia");
-                    barcelonaCity.setLatitude(41.383);
-                    barcelonaCity.setLongitude(2.183);
-                    barcelonaCity.save();
-
-                    final List<City> cities = City.listAll(City.class);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ForecastApplication.getInstance().getBus().post(cities);
-                        }
-                    });
-
-                    for (City city: cities) {
-                        ForecastApplication.getInstance().getJobManager().addJob(new ForecastJob(city));
-                    }
-                }
-            }).start();
+            ForecastApplication.getInstance().getJobManager().addJobInBackground(new FirsRunJob());
         }else {
             update();
         }
@@ -125,25 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void update() {
         isLoading = true;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final List<City> cities = City.listAll(City.class);
-                runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        mAdapter.addCities(cities);
-                        isLoading = false;
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                });
-
-                for (City city: cities) {
-                    ForecastApplication.getInstance().getJobManager().addJob(new ForecastJob(city));
-                }
-            }
-        }).start();
+        ForecastApplication.getInstance().getJobManager().addJobInBackground(new LoadAllCitiesJob());
     }
 
     @Override
@@ -166,6 +97,11 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe
     public void updateAll(ArrayList<City> cities){
         mAdapter.addCities(cities);
+        isLoading = false;
+        mSwipeRefreshLayout.setRefreshing(false);
+        for (City city: cities) {
+            ForecastApplication.getInstance().getJobManager().addJobInBackground(new ForecastJob(city));
+        }
     }
 
     @OnClick(R.id.fab)

@@ -10,6 +10,7 @@ import com.squareup.otto.Bus;
 
 import br.alexandrenavarro.forecast.BuildConfig;
 import br.alexandrenavarro.forecast.SystemPreferences;
+import br.alexandrenavarro.forecast.utils.MainThreadBus;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -89,7 +90,7 @@ public class ForecastApplication extends SugarApp {
 
     public Bus getBus() {
         if (this.bus == null) {
-            this.bus = new Bus();
+            this.bus = new MainThreadBus();
         }
 
         return this.bus;
