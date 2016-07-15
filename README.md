@@ -1,19 +1,19 @@
 # Forecast
 
-This project is a weather Android app for you keep updated of your preferred places. Its use [worldweatheronline api][1] that 
+This project is a weather Android app for you to keep updated your preferred places. The wheather provider is the [worldweatheronline api][1] what 
 means you need create a api key to build you own weather app.
 
 Third Party Libraries and Reasons
 ---------------------------------
 
-To be compatible with old versions are used as much as possible Views and Classes from support-library, that include appcompat and design. 
+To be compatible with old versions are used as much as possible Views and Classes from support-library, that includes appcompat and design. 
 
-Are used some libraries that are standard in the market, like retrofit and okhttp3 to handle with network. They are very efficient, flexible. 
+It is used some libraries that are standard in the market, like retrofit and okhttp3 to handle with network. They are very efficient, flexible. 
 For example, [RxJava](https://github.com/ReactiveX/RxJava) and [RxAndroid](https://github.com/ReactiveX/RxAndroid), are compatible with retrofit.
  
-For loading images was used Picasso because it's simple, powerful and optimize development time. For most projects and, this is very simple, are no problems, we no need worry about out of memory.
+For loading images was used Picasso because it's simple, powerful and optimize development time. 
 
-To simplify the data persistence Suggar ORM was picked.
+To simplify the data persistence layer Suggar ORM was picked.
 
 [Butter Knife](https://github.com/JakeWharton/butterknife) help us with thousands of findsbyId. It implements Dependency Injection and is easy and fast to understand and learn.
 
@@ -25,10 +25,12 @@ To simplify the data persistence Suggar ORM was picked.
 Improvements
 ------------
 
-The project was very simple to apply the DAO Pattern, only a few queries are made, but it could be done. The most important refactoring that could be applied would be [RxJava](https://github.com/ReactiveX/RxJava), although \n
+The project was very simple to apply the DAO Pattern, only a few queries are made, but it could be done in case to keep readability. The most important refactoring that could be applied would be [RxJava](https://github.com/ReactiveX/RxJava), although \n
 the available time was short.
 
 Another nice improvement could be using support data binding api.
+
+Definitely, tests should be done.
 
 ##Build
 ------------------
@@ -37,7 +39,7 @@ Very straightforward, clone the project and open it in Android Studio or run it 
 
 ##Available Elements
 ###Main Screen
-Main screen of the app, the user can delete a city,see the detail screen or include a new city.
+Main screen of the app, the user can delete a city, see the detail screen or include a new city.
 
 <img src="/screenshots/main_screen.png" width="200">
 
